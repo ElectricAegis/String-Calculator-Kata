@@ -16,7 +16,7 @@ namespace StringCalculatorKata.Tests
         [TestCase("13.5", 13.5)]
         [TestCase("1,2", 3)]
         [TestCase("0,12", 12)]
-        [TestCase("10,1234", 1244)]
+        [TestCase("10,1234", 10)]
         [TestCase("13.5,127.7", 141.2)]
         [TestCase("35.058,75.376,73.986,12.168,82.792,57.5,51.252,80.478,29.899,54.893",553.402)]
         public void CanAddReturnCorrectSum(string numbers, double result)
@@ -27,7 +27,7 @@ namespace StringCalculatorKata.Tests
 
         [TestCase("1\n2", 3)]
         [TestCase("0,12\n25", 37)]
-        [TestCase("10\n1234,1", 1245)]
+        [TestCase("10\n1234,1", 11)]
         [TestCase("13.5\n127.7,1", 142.2)]
         public void CanAddHandleMixedDelimiters(string numbers, double result)
         {
@@ -38,8 +38,8 @@ namespace StringCalculatorKata.Tests
         [TestCase("//;\n", 0)]
         [TestCase("//;\n1", 1)]
         [TestCase("//;\n1;2",3)]
-        [TestCase("//*\n10*1234*1", 1245)]
-        [TestCase("//\n\n10\n1234\n1", 1245)]
+        [TestCase("//*\n10*1234*1", 11)]
+        [TestCase("//\n\n10\n1234\n1", 11)]
         [TestCase("//$\n13.5$127.7$1", 142.2)]
         public void CanAddParseCustomDelimiters(string numbers, double result)
         {
@@ -59,6 +59,15 @@ namespace StringCalculatorKata.Tests
         {
             var stringCalculator = new StringCalculator();
             stringCalculator.Add(numbers);
+        }
+
+        [TestCase("//*\n10*1234*1", 11)]
+        [TestCase("10\n1234,1", 11)]
+        [TestCase("999\n1000,1001", 1999)]
+        public void AddIgnoresNumbersGreaterThan1000(string numbers, double result)
+        {
+            var stringCalculator = new StringCalculator();
+            Assert.AreEqual((decimal)result, stringCalculator.Add(numbers));
         }
     }
 }

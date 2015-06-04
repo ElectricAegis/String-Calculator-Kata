@@ -27,20 +27,26 @@ namespace StringCalculatorKata
 
             var numberList = delimitedNumbers
                 .Split(delimiters.ToArray())
-                .Select(x => Decimal.Parse(x));
+                .Select(x => Decimal.Parse(x))
+                .Where(number => number <= 1000);
 
+            CheckForNegativeNumbers(numberList);
+
+            return numberList.Sum();
+        }
+
+        private static void CheckForNegativeNumbers(IEnumerable<decimal> numberList)
+        {
             var negativeNumbers = numberList.Where(number => number < 0);
             if (negativeNumbers.Any())
             {
                 throw new ArgumentException(
                     String.Format(
-                        "negatives not allowed: {0}", 
+                        "negatives not allowed: {0}",
                         String.Join(",", negativeNumbers.OrderByDescending(number => number))
                     )
                 );
             }
-
-            return numberList.Sum();
         }
 
         private IList<char> GetDelimiters(string delimitedNumbers)
